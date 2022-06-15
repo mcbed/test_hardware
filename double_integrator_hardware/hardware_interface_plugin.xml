@@ -1,0 +1,9 @@
+<library path="double_integrator_hardware">
+  <class name="double_integrator_hardware/DoubleIntegratorHardwareInterface"
+         type="double_integrator_hardware::DoubleIntegratorHardwareInterface"
+         base_class_type="hardware_interface::ActuatorInterface">
+    <description>
+      ROS2 Control fake hardware interface simulating a double integrator system.
+    </description>
+  </class>
+</library>

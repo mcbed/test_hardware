@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<robot name="dint">
+
+    <link name="dint_base"/>
+    <link name="dint_l"/>
+
+    <joint name="joint_a1" type="revolute">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <parent link="dint_base"/>
+        <child link="phi_l"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+
+    <ros2_control name="dint" type="actuator">
+        <hardware>
+            <plugin>double_integrator_hardware/DoubleIntegratorHardwareInterface</plugin>
+        </hardware>
+        <joint name="joint_a1">
+            <command_interface name="acceleration" />
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="acceleration"/>
+        </joint>
+    </ros2_control>
+</robot>

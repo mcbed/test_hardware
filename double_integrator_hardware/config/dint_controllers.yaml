@@ -1,0 +1,15 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 200  # Hz
+
+    mpi_controller:
+      type: mpi_controller/MPIController
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+mpi_controller:
+  ros__parameters:
+    joints:
+      - joint_a1
+    sampling_time: 0.005

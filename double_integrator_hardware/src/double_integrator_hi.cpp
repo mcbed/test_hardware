@@ -43,6 +43,7 @@ CallbackReturn DoubleIntegratorHardwareInterface::on_init(
   hw_states_velocity_ = std::numeric_limits<double>::quiet_NaN();
   hw_states_acceleration_ = std::numeric_limits<double>::quiet_NaN();
   hw_commands_acceleration_ = std::numeric_limits<double>::quiet_NaN();
+  hw_states_ext_effort_ = std::numeric_limits<double>::quiet_NaN();
 
   // double integrator has currently exactly 3 states and 1 command interface on each joint
   if (info_.joints[0].command_interfaces.size() != 1)
@@ -63,11 +64,11 @@ CallbackReturn DoubleIntegratorHardwareInterface::on_init(
     return CallbackReturn::ERROR;
   }
 
-  if (info_.joints[0].state_interfaces.size() != 3)
+  if (info_.joints[0].state_interfaces.size() != 4)
   {
     RCLCPP_FATAL(
       rclcpp::get_logger("DoubleIntegratorHardwareInterface"),
-      "Joint '%s' has %ld state interface. 3 expected.", info_.joints[0].name.c_str(),
+      "Joint '%s' has %ld state interface. 4 expected.", info_.joints[0].name.c_str(),
       info_.joints[0].state_interfaces.size());
     return CallbackReturn::ERROR;
   }
@@ -96,6 +97,14 @@ CallbackReturn DoubleIntegratorHardwareInterface::on_init(
       info_.joints[0].state_interfaces[0].name.c_str(), hardware_interface::HW_IF_ACCELERATION);
     return CallbackReturn::ERROR;
   }
+  if (info_.joints[0].state_interfaces[3].name != "external_effort")
+  {
+    RCLCPP_FATAL(
+      rclcpp::get_logger("DoubleIntegratorHardwareInterface"),
+      "Joint '%s' have %s state interface. '%s' expected.", info_.joints[0].name.c_str(),
+      info_.joints[0].state_interfaces[0].name.c_str(), "external_effort");
+    return CallbackReturn::ERROR;
+  }
 
   return CallbackReturn::SUCCESS;
 }
@@ -113,6 +122,9 @@ DoubleIntegratorHardwareInterface::export_state_interfaces()
 
   state_interfaces.emplace_back(hardware_interface::StateInterface(
     info_.joints[0].name, hardware_interface::HW_IF_ACCELERATION, &hw_states_acceleration_));
+
+  state_interfaces.emplace_back(hardware_interface::StateInterface(
+    info_.joints[0].name, "external_effort", &hw_states_ext_effort_));
 
   return state_interfaces;
 }
@@ -134,6 +146,7 @@ CallbackReturn DoubleIntegratorHardwareInterface::on_activate(const rclcpp_lifec
   hw_states_velocity_ = 0;
   hw_states_position_ = 0;
   hw_states_acceleration_ = 0;
+  hw_states_ext_effort_ = 0;
 
   RCLCPP_INFO(
     rclcpp::get_logger("DoubleIntegratorHardwareInterface"), "System Successfully started!");

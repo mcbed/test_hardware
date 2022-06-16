@@ -64,6 +64,7 @@ private:
   double hw_states_position_;
   double hw_states_velocity_;
   double hw_states_acceleration_;
+  double hw_states_ext_effort_;
 
 };
 

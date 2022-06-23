@@ -176,7 +176,7 @@ hardware_interface::return_type DoubleIntegratorHardwareInterface::read(const rc
   // ------------------------------------------------------------------------------------------
 hardware_interface::return_type DoubleIntegratorHardwareInterface::write(const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
-  if(std::isnan(hw_commands_acceleration_))
+  if(!std::isnan(hw_commands_acceleration_))
     hw_states_acceleration_ = hw_commands_acceleration_;
   else
     hw_states_acceleration_ = 0;

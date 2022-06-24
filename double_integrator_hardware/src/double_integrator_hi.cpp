@@ -164,12 +164,18 @@ CallbackReturn DoubleIntegratorHardwareInterface::on_deactivate(const rclcpp_lif
   return CallbackReturn::SUCCESS;
 }
   // ------------------------------------------------------------------------------------------
-hardware_interface::return_type DoubleIntegratorHardwareInterface::read(const rclcpp::Time & /*time*/, const rclcpp::Duration & period)
+hardware_interface::return_type DoubleIntegratorHardwareInterface::read(const rclcpp::Time & time, const rclcpp::Duration & /*period*/)
 {
   // Process input data and populate hw_states_position_, hw_states_velocity_, hw_states_acceleration_
+  if (previous_time_.nanoseconds() == 0){
+    previous_time_ = time;
+    return hardware_interface::return_type::OK;
+  }
+  
+  hw_states_velocity_ = hw_states_velocity_ + hw_states_acceleration_*(time.nanoseconds()-previous_time_.nanoseconds())*1e-9;
+  hw_states_position_ = hw_states_position_ + hw_states_velocity_*(time.nanoseconds()-previous_time_.nanoseconds())*1e-9;
 
-  hw_states_velocity_ = hw_states_velocity_ + hw_states_acceleration_*period.nanoseconds()*1e-9;
-  hw_states_position_ = hw_states_position_ + hw_states_velocity_*period.nanoseconds()*1e-9;
+  previous_time_ = time;
 
   return hardware_interface::return_type::OK;
 }

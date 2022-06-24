@@ -66,6 +66,8 @@ private:
   double hw_states_acceleration_;
   double hw_states_ext_effort_;
 
+  rclcpp::Time previous_time_;
+
 };
 
 }  // namespace double_integrator_hardware

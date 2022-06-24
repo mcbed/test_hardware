@@ -13,3 +13,8 @@ mpi_controller:
     joints:
       - joint_a1
     sampling_time: 0.005
+    constraints:
+      - joint_a1: 
+        - acceleration: [-1.0,10.0]
+    control_horizon: 10
+    stiffness: [5000.0]
